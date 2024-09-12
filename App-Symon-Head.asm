@@ -111,8 +111,8 @@ use_SyDesktop_DSKPNT    equ 0   ;Fills the screen
 use_SyDesktop_DSKBGR    equ 0   ;Redraws the desktop background
 use_SyDesktop_DSKPLT    equ 0   ;Redraws the complete screen
 
-READ "..\..\..\SVN-Main\trunk\Docs-Developer\symbos_lib-SystemManager.asm"
-READ "..\..\..\SVN-Main\trunk\Docs-Developer\symbos_lib-DesktopManager.asm"
+READ "..\..\..\..\SVN-Main\trunk\Docs-Developer\symbos_lib-SystemManager.asm"
+READ "..\..\..\..\SVN-Main\trunk\Docs-Developer\symbos_lib-DesktopManager.asm"
 READ "App-Symon.asm"
 
 App_EndTrns
