@@ -397,7 +397,16 @@ mapini7 dec iyh
         call mapfil
         ld a,(cfgcpctyp)        ;bit[0-4] 0-4=CPC, 6=EP, 7-10=MSX, 12-13=PCW, 15-17=NC
         and 31
-        ld e,maptyp_vid         ;ep,cpc,pcw,nc -> video ram at 0,#c000,#4000    ##!!## missing vram on pcw
+        cp 18
+        jr z,mapinik
+        cp 20
+        jr nz,mapinii
+mapinik ld de,memmapg00+3
+        call mapini2
+        call mapini2
+        jr mapinij
+
+mapinii ld e,maptyp_vid         ;ep,cpc,pcw,nc -> video ram at 0,#c000,#4000    ##!!## empty for svm, znx
         cp 7
         ccf
         jr nc,mapinid
@@ -412,7 +421,7 @@ mapinid push de
         call mapfil
         pop de
 
-        ld a,maptyp_ops
+mapinij ld a,maptyp_ops
         cp e
         jr z,mapinig
         ld a,1
@@ -813,7 +822,8 @@ wintittxt   db "SyMon - SymbOS Memory Monitor",0
 winstawai   db "Calculating...",0
 
 prgwinmentx1 db "File",0
-prgwinmen1tx0 db "Quit",0
+prgwinmen1tx0 db "About",0
+prgwinmen1tx1 db "Quit",0
 
 tabmaitxt1  db "Memory map",0
 txtbutref   db "Refresh",0
@@ -856,10 +866,10 @@ legtxtsel   db "Selected",0
 
 ;### info
 prgmsginf1 db "SyMon",0
-prgmsginf2 db " Version 1.0 (Build "
-read "..\..\..\SVN-Main\trunk\build.asm"
+prgmsginf2 db " Version 1.1 (Build "
+read "..\..\..\SRC-Main\build.asm"
            db "pdt)",0
-prgmsginf3 db " Copyright <c> 2022 SymbiosiS",0
+prgmsginf3 db " Copyright <c> 2025 SymbiosiS",0
 
 
 
@@ -878,13 +888,13 @@ App_MsgBuf ds 14
 
 ;### INFO-FENSTER #############################################################
 
-prgmsginf  dw prgmsginf1,4*1+2,prgmsginf2,4*1+2,prgmsginf3,4*1+2,prgicnbig
+prgmsginf  dw prgmsginf1,4*1+2,prgmsginf2,4*1+2,prgmsginf3,4*1+2,0,prgicnbig,prgicn16c
 
 
 ;### MAIN WINDOW ##############################################################
 
 prgwinmen  dw 1, 1+4,prgwinmentx1,prgwinmen1,0
-prgwinmen1 dw 1, 1,prgwinmen1tx0,prgend,0
+prgwinmen1 dw 3, 1,prgwinmen1tx0,prginf,0, 8,0,0,0, 1,prgwinmen1tx1,prgend,0
 
 wingam       dw #7501,0,63,3,209,144,0,0,209,144,209,144,209,144,prgicnsml,wintittxt,winstatxt,prgwinmen,wingamgrp,0,0:ds 136+14
 
